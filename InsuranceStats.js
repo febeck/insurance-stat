@@ -6,7 +6,7 @@ class InsuranceStats {
 
     ingest(event) {
         this.events = [...this.events, event]
-        if (event.userId in this.userInfo) {
+        try {
             const { userId, amount } = event
             const { count, max, mean, sum } = this.userInfo[userId]
             this.userInfo[event.userId] = {
@@ -15,7 +15,7 @@ class InsuranceStats {
                 mean: (sum + amount) / (count + 1),
                 sum: sum + amount,
             }
-        } else {
+        } catch (e) {
             this.userInfo = {
                 ...this.userInfo,
                 [event.userId]: {
@@ -29,15 +29,27 @@ class InsuranceStats {
     }
 
     getSum(userId) {
-        return userId in this.userInfo ? this.userInfo[userId].sum : null
+        try {
+           return this.userInfo[userId].sum
+         } catch (e) {
+            return null
+         }
     }
 
     getMax(userId) {
-        return userId in this.userInfo ? this.userInfo[userId].max : null
+        try {
+           return this.userInfo[userId].max
+         } catch (e) {
+            return null
+         }
     }
 
     getMean(userId) {
-        return userId in this.userInfo ? this.userInfo[userId].mean : null
+        try {
+           return this.userInfo[userId].mean
+         } catch (e) {
+            return null
+         }
     }
 
 }
